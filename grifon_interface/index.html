@@ -587,7 +587,7 @@
 
   <script>
     (function(){
-      const VERSAO = '2.1.1';
+      const VERSAO = '2.2.3';
       const $ = id => document.getElementById(id);
       const logBox = $('log');
       const log = m => {
@@ -1707,32 +1707,68 @@
           addEdge('C','D', null); addEdge('D','A', null);
           addEdge('A','C', null);
         } else if (tipo === 'margaridas') {
-          // Ativar configurações necessárias
+          // Configurar como grafo orientado (já que o arquivo tem 1 na segunda linha)
           state.orientado = true;
-          state.allowLoops = true;
+          state.allowLoops = false;
           $('selTipo').value = 'orientado';
-          $('swLoopAllowed').checked = true;
-
-          // Posicionar vértices A e B
-          const posA = { x: 300, y: 300 };
-          const posB = { x: 550, y: 300 };
-          addVertex('A', posA);
-          addVertex('B', posB);
-
-          // Adicionar 9 loops em A
-          for (let i = 0; i < 9; i++) {
-            addEdge('A', 'A', null, false);
-          }
-          // Adicionar 9 loops em B
-          for (let i = 0; i < 9; i++) {
-            addEdge('B', 'B', null, false);
-          }
-          // Adicionar 9 arestas A → B
-          for (let i = 0; i < 9; i++) {
-            addEdge('A', 'B', null, false);
-          }
-
-          log('Modelo "Margaridas" carregado: A e B com 9 loops cada e 9 arestas entre eles.');
+          $('swLoopAllowed').checked = false;
+          
+          // Lista de vértices de V1 a V20
+          const verticesList = ['V1', 'V2', 'V3', 'V4', 'V5', 'V6', 'V7', 'V8', 'V9', 'V10', 
+                                'V11', 'V12', 'V13', 'V14', 'V15', 'V16', 'V17', 'V18', 'V19', 'V20'];
+          
+          // Posições dos vértices conforme o arquivo
+          const positions = {
+            'V1': { x: -417, y: 1 },
+            'V2': { x: -372, y: -200 },
+            'V3': { x: -488, y: 161 },
+            'V4': { x: -613, y: -17 },
+            'V5': { x: -283, y: 128 },
+            'V6': { x: -567, y: -126 },
+            'V7': { x: -264, y: -146 },
+            'V8': { x: -580, y: 96 },
+            'V9': { x: -385, y: 172 },
+            'V10': { x: -477, y: -184 },
+            'V11': { x: 144, y: -13 },
+            'V12': { x: 22, y: -141 },
+            'V13': { x: 118, y: -192 },
+            'V14': { x: 217, y: -205 },
+            'V15': { x: 309, y: -151 },
+            'V16': { x: 349, y: -53 },
+            'V17': { x: 334, y: 53 },
+            'V18': { x: 276, y: 130 },
+            'V19': { x: 168, y: 166 },
+            'V20': { x: 58, y: 142 }
+          };
+          
+          // Adicionar vértices com posições
+          verticesList.forEach(id => {
+            const pos = positions[id];
+            if (pos) {
+              addVertex(id, { x: pos.x, y: pos.y });
+            } else {
+              addVertex(id);
+            }
+          });
+          
+          // Lista de arestas do arquivo (39 arestas)
+          const arestas = [
+            ['V1', 'V7'], ['V1', 'V2'], ['V1', 'V10'], ['V1', 'V6'], ['V1', 'V4'],
+            ['V1', 'V8'], ['V1', 'V3'], ['V1', 'V9'], ['V1', 'V5'],
+            ['V11', 'V12'], ['V13', 'V11'], ['V11', 'V14'], ['V11', 'V15'], ['V11', 'V16'],
+            ['V11', 'V17'], ['V11', 'V18'], ['V11', 'V19'], ['V11', 'V20'], ['V11', 'V1'],
+            ['V1', 'V7'], ['V7', 'V1'], ['V2', 'V1'], ['V10', 'V1'], ['V6', 'V1'],
+            ['V4', 'V1'], ['V8', 'V1'], ['V3', 'V1'], ['V9', 'V1'], ['V5', 'V1'],
+            ['V1', 'V11'], ['V20', 'V11'], ['V19', 'V11'], ['V18', 'V11'], ['V17', 'V11'],
+            ['V16', 'V11'], ['V15', 'V11'], ['V14', 'V11'], ['V13', 'V11'], ['V12', 'V11']
+          ];
+          
+          // Adicionar todas as arestas
+          arestas.forEach(([u, v]) => {
+            addEdge(u, v, null, false);
+          });
+          
+          log('Modelo "Margaridas" carregado: Grafo com 20 vértices e 39 arestas orientadas.');
         }
 
         setArrowMode();
@@ -1918,7 +1954,7 @@
   </script>
   
   <!--
-	Versão Atual do Grifon - 2.1.2 - Editor de Grafos:
+	Versão Atual do Grifon - 2.2.3 - Editor de Grafos:
 
 	✅ Palco ajustado com as dimensões ideais
 
@@ -1926,7 +1962,7 @@
 
 	✅ Múltiplos loops e arestas paralelas funcionando
 
-	✅ Grafo Margaridas completo (9 loops em A, 9 loops em B, 9 arestas A→B)
+	✅ Novo modelo Margaridas: 20 vértices e 39 arestas orientadas
 
 	✅ Posicionamento centralizado dos modelos pré-definidos
 
